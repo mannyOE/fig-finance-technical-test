@@ -1,0 +1,36 @@
+{
+  "name": "fig-finance-technical-test",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:api": "nodemon --inspect api/index.js",
+    "start:ui": "cd client && npm run start",
+    "start": "npm run start:api && npm run start:ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mannyOE/fig-finance-technical-test.git"
+  },
+  "keywords": [
+    "fig",
+    "finance",
+    "technical",
+    "test"
+  ],
+  "author": "Ahman Emmanuel <ahmanemmanuel@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mannyOE/fig-finance-technical-test/issues"
+  },
+  "homepage": "https://github.com/mannyOE/fig-finance-technical-test#readme",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "joi": "^17.6.0",
+    "mongoose": "^6.2.0",
+    "nodemon": "^2.0.15"
+  }
+}
