@@ -5,7 +5,8 @@ module.exports = {
 			let pagination = {
 				skip: 0,
 				count: 10,
-				totalPages: 0
+				totalPages: 0,
+				page: 1
 			}
 			let query = {$and: []}
 			let {page, pageSize, virtual, keywords, category, date_from, date_to} =
@@ -15,6 +16,7 @@ module.exports = {
 			}
 			if (page) {
 				page = Number(page)
+				pagination.page = page
 				pagination.skip = (page - 1) * pagination.count
 			}
 			if (date_to) {
@@ -24,7 +26,7 @@ module.exports = {
 			}
 			if (date_from) {
 				query.$and.push({
-					date: {$lt: new Date(date_from)}
+					date: {$gte: new Date(date_from)}
 				})
 			}
 			if (category) {
@@ -69,13 +71,17 @@ module.exports = {
 				delete query.$and
 			}
 
-			pagination.totalPages = await Events.countDocuments(query)
+			pagination.totalPages = Math.ceil(
+				(await Events.countDocuments(query)) / pagination.count
+			)
 			let results = await Events.find(query)
+				.skip(pagination.skip)
+				.limit(pagination.count)
 			return res.send({
 				results,
 				pagination: {
 					totalPages: pagination.totalPages,
-					currentPage: pagination.skip + 1
+					currentPage: pagination.page
 				}
 			})
 		} catch (error) {

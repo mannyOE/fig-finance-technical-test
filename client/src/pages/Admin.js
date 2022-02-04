@@ -133,7 +133,7 @@ export default function Admin() {
 							className='form-control col-12 col-md-6'
 							id='exampleFormControlSelect1'
 						>
-							<option>None</option>
+							<option value={null}>None</option>
 							{categories.map((x) => {
 								return <option key={x}>{x}</option>
 							})}
