@@ -5,8 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:api": "nodemon --inspect api/index.js",
-    "start:ui": "cd client && npm run start",
-    "start": "npm run start:api && npm run start:ui"
+    "start:ui": "cd client && npm run start"
   },
   "repository": {
     "type": "git",
