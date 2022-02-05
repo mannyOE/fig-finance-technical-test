@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:api": "nodemon --inspect api/index.js",
-    "start:ui": "cd client && npm run start"
+    "cypress:open": "./node_modules/.bin/cypress open",
+    "start:api": "nodemon --ignore ./cypress --inspect api/index.js",
+    "start:ui": "cd client && npm run start",
+    "cypress:run": "./node_modules/.bin/cypress run --spec ** / *. spec.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +25,10 @@
   },
   "homepage": "https://github.com/mannyOE/fig-finance-technical-test#readme",
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
+    "cypress": "^9.4.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "joi": "^17.6.0",

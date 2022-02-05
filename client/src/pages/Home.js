@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {update} from '../store'
+const USERS = 'USERS'
 
-export default function Home() {
+export default function Home({base_url}) {
 	const [loaded, setLoaded] = useState(false)
 	const [message, setMessage] = useState('')
 	const results = useSelector((state) => state.events.results)
@@ -28,37 +29,41 @@ export default function Home() {
 		pageSize: 5,
 		totalPages: 1
 	})
+	const generateQuery = async function (page) {
+		let query = `?pageSize=${pagination.pageSize}&page=${
+			page || pagination.page
+		}`
+		setMessage('No results found at this time')
+		if (data.category && data.category !== 'None') {
+			setMessage('No results to your query')
+			query = query + `&category=${data.category}`
+		}
+
+		if (data.keywords && data.keywords.trim() !== '') {
+			setMessage('No results to your query')
+			query = query + `&keywords=${data.keywords.replace(' ', ',')}`
+		}
+
+		if (data.isVirtual && data.isVirtual !== 'None') {
+			setMessage('No results to your query')
+			query = query + `&virtual=${data.isVirtual === 'Yes' ? true : false}`
+		}
+
+		if (data.date_from && data.date_to) {
+			setMessage('No results to your query')
+			query = query + `&date_from=${data.date_from}&date_to=${data.date_to}`
+		}
+		return query
+	}
 
 	const loadEvents = useCallback(
 		async (page) => {
-			let query = `?pageSize=${pagination.pageSize}&page=${
-				page || pagination.page
-			}`
-			setMessage('No results found at this time')
-			if (data.category && data.category !== 'None') {
-				setMessage('No results to your query')
-				query = query + `&category=${data.category}`
-			}
-
-			if (data.keywords && data.keywords.trim() !== '') {
-				setMessage('No results to your query')
-				query = query + `&keywords=${data.keywords.replace(' ', ',')}`
-			}
-
-			if (data.isVirtual && data.isVirtual !== 'None') {
-				setMessage('No results to your query')
-				query = query + `&virtual=${data.isVirtual === 'Yes' ? true : false}`
-			}
-
-			if (data.date_from && data.date_to) {
-				setMessage('No results to your query')
-				query = query + `&date_from=${data.date_from}&date_to=${data.date_to}`
-			}
-			await fetch('http://localhost:3001/events' + query, {
-				method: 'GET', // *GET, POST, PUT, DELETE, etc.
+			let query = await generateQuery(page)
+			await fetch(base_url + '/events' + query, {
+				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					authorization: 'Users'
+					authorization: USERS
 				}
 			})
 				.then((response) => response.json())
@@ -71,11 +76,11 @@ export default function Home() {
 					dispatch(update(dt.results))
 				})
 		},
-		[pagination, data, dispatch]
+		[pagination, data, dispatch, generateQuery]
 	)
 
 	useEffect(() => {
-		// document.title = 'Tech events UK'
+		document.title = 'Tech events UK'
 		if (!loaded) {
 			loadEvents()
 			setLoaded(true)

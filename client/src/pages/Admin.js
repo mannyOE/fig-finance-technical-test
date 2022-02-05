@@ -1,16 +1,18 @@
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 const Joi = require('joi')
+const ADMINISTRATION = 'ADMINISTRATION'
+const VIRTUAL = 'isVirtual'
 
-export default function Admin() {
+export default function Admin({base_url}) {
 	function submitButton(e) {
 		e.preventDefault()
 		setLoading(true)
-		fetch('http://localhost:3001/events', {
+		fetch(base_url + '/events', {
 			method: 'POST', // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				'Content-Type': 'application/json',
-				authorization: 'Administration'
+				authorization: ADMINISTRATION
 			},
 			body: JSON.stringify(data)
 		})
@@ -68,7 +70,7 @@ export default function Admin() {
 
 	const changeData = function (value, field) {
 		let dt = {...data}
-		if (field === 'isVirtual') {
+		if (field === VIRTUAL) {
 			dt[field] = !dt[field]
 		} else {
 			dt[field] = value
@@ -82,7 +84,7 @@ export default function Admin() {
 					<h4>Tech Events UK Admin Page</h4>
 					<Link to='/'>Home</Link>
 				</div>
-				<form className='mt-5' onSubmit={submitButton}>
+				<form className='mt-5' onSubmit={(e) => submitButton(e)}>
 					<h5>Create a new event</h5>
 
 					{message && message.length > 0 ? (

@@ -1,20 +1,20 @@
 const {Router} = require('express')
-const {fetchEvents, createEvent} = require('./events.controller')
+const {
+	fetchEvents,
+	createEvent,
+	deleteOneEvent,
+	fetchOneEvent
+} = require('./events.controller')
 const Joi = require('joi')
+const ADMINISTRATION = 'ADMINISTRATION'
+const USERS = 'USERS'
 
 const router = Router()
 
 const middlewares = {
-	users: async function (req, res, next) {
+	userTypes: async function (req, res, next, type) {
 		const header = req.headers['authorization']
-		if (header && header === 'Users') {
-			return next()
-		}
-		return res.status(403).send({message: 'Access denied'})
-	},
-	admin: async function (req, res, next) {
-		const header = req.headers['authorization']
-		if (header && header === 'Administration') {
+		if (header && header === type) {
 			return next()
 		}
 		return res.status(403).send({message: 'Access denied'})
@@ -36,7 +36,28 @@ const middlewares = {
 	}
 }
 
-router.get('/', middlewares.users, fetchEvents)
-router.post('/', middlewares.admin, middlewares.validateEvent, createEvent)
+router.get(
+	'/',
+	(req, res, next) => middlewares.userTypes(req, res, next, USERS),
+	fetchEvents
+)
+router.post(
+	'/',
+	(req, res, next) => middlewares.userTypes(req, res, next, ADMINISTRATION),
+	middlewares.validateEvent,
+	createEvent
+)
+
+router.delete(
+	'/:eventID',
+	(req, res, next) => middlewares.userTypes(req, res, next, ADMINISTRATION),
+	deleteOneEvent
+)
+
+router.get(
+	'/:eventID',
+	(req, res, next) => middlewares.userTypes(req, res, next, ADMINISTRATION),
+	fetchOneEvent
+)
 
 module.exports = router
