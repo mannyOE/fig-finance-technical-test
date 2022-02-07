@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "cypress:open": "./node_modules/.bin/cypress open",
-    "start:api": "nodemon --ignore ./cypress --inspect api/index.js",
+    "start:api": "nodemon --ignore ./cypress api/index.js",
     "start:ui": "cd client && npm run start",
     "cypress:run": "./node_modules/.bin/cypress run --spec ** / *. spec.js"
   },
