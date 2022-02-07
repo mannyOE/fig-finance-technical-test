@@ -1,5 +1,5 @@
 const config = require('../config')
-
+const logger = require('Console')
 const mongoose = require('mongoose')
 
 const {PWD, USER, CLUSTER, DB} = config
@@ -11,9 +11,9 @@ const connectDb = async (cb) => {
 		{useUnifiedTopology: true, useNewUrlParser: true},
 		(err) => {
 			if (err) {
-				console.log('Connection to Database failed. ')
+				logger.log('Connection to Database failed. ')
 			} else {
-				console.log('Database connection successful. ' + DATABASE_URL)
+				logger.log('Database connection successful. ' + DATABASE_URL)
 				cb()
 			}
 		}
@@ -22,6 +22,6 @@ const connectDb = async (cb) => {
 
 const db = mongoose.connection
 
-db.on('error', console.error.bind(console, 'MongoDB connection error'))
+db.on('error', logger.error.bind(console, 'MongoDB connection error'))
 
 module.exports = connectDb

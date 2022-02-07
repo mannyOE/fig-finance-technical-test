@@ -3,6 +3,7 @@ const connectDb = require('./db')
 const express = require('express')
 var bodyParser = require('body-parser')
 const cors = require('cors')
+const logger = require('Console')
 const eventsRouter = require('./events.routes')
 
 var jsonParser = bodyParser.json()
@@ -21,6 +22,6 @@ app.use('/events', eventsRouter)
 
 connectDb(() => {
 	app.listen(PORT, async () => {
-		console.log(`Server listening on ${PORT}`)
+		logger.log(`Server listening on ${PORT}`)
 	})
 })
